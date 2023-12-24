@@ -1,0 +1,2 @@
+python3 SMD_Anim_Transform_Duplicate.py
+pause

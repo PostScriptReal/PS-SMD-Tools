@@ -1,0 +1,36 @@
+mode dupe
+Bip01 L Finger1
+Bip01 L Finger2
+Bip01 L Hand
+-
+Bip01 L Finger11
+Bip01 L Finger21
+Bip01 L Finger2
+-
+Bip01 L Finger12
+Bip01 L Finger22
+Bip01 L Finger21
+-
+Bip01 L Finger1
+Bip01 L Finger3
+Bip01 L Hand
+-
+Bip01 L Finger11
+Bip01 L Finger31
+Bip01 L Finger3
+-
+Bip01 L Finger12
+Bip01 L Finger32
+Bip01 L Finger31
+-
+Bip01 L Finger1
+Bip01 L Finger4
+Bip01 L Hand
+-
+Bip01 L Finger11
+Bip01 L Finger41
+Bip01 L Finger4
+-
+Bip01 L Finger12
+Bip01 L Finger42
+Bip01 L Finger41

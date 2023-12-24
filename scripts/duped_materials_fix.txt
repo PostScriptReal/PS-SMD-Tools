@@ -1,0 +1,16 @@
+mode mat
+*2.bmp
+2.bmp
+.bmp
+-
+*3.bmp
+3.bmp
+.bmp
+-
+*4.bmp
+4.bmp
+.bmp
+-
+*5.bmp
+5.bmp
+.bmp
