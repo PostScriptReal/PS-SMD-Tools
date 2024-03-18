@@ -142,27 +142,32 @@ class OptWin:
 
 class GUI:
 	def __init__(self, root):
+		# Set Window title
 		root.title("PS's SMD Tools")
 
+		# Create Window
 		frame = Frame(root, borderwidth=2, relief="sunken")
 		frame.grid(column=6, row=6, sticky=(N, E, S, W))
 		root.columnconfigure(1, weight=1)
 		root.rowconfigure(1, weight=1)
 
-		dupe_button = Button(frame, text="Bone Dupe", command=self.bd_menu)
-		dupe_button.grid(column=2, row=1, sticky=(N), padx=(0, 0))
-
-		mat_button = Button(frame, text="Material Fix", command=self.mnc_menu)
-		mat_button.grid(column=2, row=1, sticky=(N), padx=(140, 0))
-
-		fakeweight = Button(frame, text="Soft Weights", command=self.fakesoft)
-		fakeweight.grid(column=3, row=1, sticky=(N), padx=(0, 195))
-
-		scripts = Button(frame, text="Scripts", command=self.scripts)
-		scripts.grid(column=3, row=1, sticky=(N), padx=(0, 70))
+		# Create Header Buttons
+		self.dupe_button = Button(frame, text="Bone Dupe", command=self.bd_menu)
+		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(95, 0))
 		
-		options = Button(frame, text="Options", command=self.options)
-		options.grid(column=3, row=1, sticky=(N), padx=(29, 0))
+
+		self.mat_button = Button(frame, text="Material Fix", command=self.mnc_menu)
+		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(235, 0))
+
+		# Getting rid of this because I don't think I could reasonably create something like this
+		"""fakeweight = Button(frame, text="Soft Weights", command=self.fakesoft)
+		fakeweight.grid(column=3, row=1, sticky=(N), padx=(0, 195))"""
+
+		self.scripts = Button(frame, text="Scripts", command=self.scripts)
+		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 223))
+		
+		self.options = Button(frame, text="Options", command=self.options)
+		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 123))
 
 		self.tile_label = Label(frame, text="Path to SMDs")
 		self.tile_label.grid(column=2, row=2, sticky=(S, W))
@@ -199,7 +204,7 @@ class GUI:
 		self.pname_entry.grid(column=3, row=7, sticky=(N, E, W))
 
 		self.action_button = Button(frame, text="Dupe", command=self.dupe)
-		self.action_button.grid(column=3, row=9, sticky=(S), padx=(0, 230))
+		self.action_button.grid(column=1, row=9, sticky=(S), padx=(0, 0), columnspan=5)
 
 		self.bmp_button = Button(frame, text="File Ext", command=self.bmp)
 		self.matrn_button = Button(frame, text="Fix Pointer", command=self.matrename)
@@ -250,15 +255,18 @@ class GUI:
 		else:
 			inst.batch_dupe(loc, base, new, parent)
 
+	""" Switches menu to the Bone Dupe Menu """
 	def bd_menu(self):
+		# Displaying Bone Dupe options
 		self.base_label.grid(column=2, row=5, sticky=(S, W))
 		self.bname_entry.grid(column=3, row=5, sticky=(N, E, W))
 		self.new_label.grid(column=2, row=6, sticky=(S, W))
 		self.nname_entry.grid(column=3, row=6, sticky=(N, E, W))
 		self.parent_label.grid(column=2, row=7, sticky=(S, W))
 		self.pname_entry.grid(column=3, row=7, sticky=(N, E, W))
-		self.action_button.grid(column=3, row=9, sticky=(S), padx=(0, 230))
+		self.action_button.grid(column=1, row=9, sticky=(S), padx=(0, 0), columnspan=5)
 		self.ws3.grid(column=1, row=8, sticky=(S))
+		# Removing SMD Mat options
 		self.bmp_button.grid_remove()
 		self.matrn_button.grid_remove()
 		self.ref_label.grid_remove()
@@ -268,7 +276,16 @@ class GUI:
 		self.rename_entry.grid_remove()
 		self.replace_label.grid_remove()
 		self.replace_entry.grid_remove()
+		# Fix centering for Header buttons
+		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(95, 0))
+		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(235, 0))
+		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 223))
+		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 123))
+		
+	
+	""" Switches menu to SMD Material options """
 	def mnc_menu(self):
+		# Removing Bone Dupe options
 		self.base_label.grid_remove()
 		self.bname_entry.grid_remove()
 		self.new_label.grid_remove()
@@ -277,8 +294,9 @@ class GUI:
 		self.pname_entry.grid_remove()
 		self.action_button.grid_remove()
 		self.ws3.grid_remove()
-		self.bmp_button.grid(column=2, row=9, sticky=(S), padx=(150, 0))
-		self.matrn_button.grid(column=3, row=9, sticky=(S), padx=(0, 110))
+		# Displaying SMD Mat options
+		self.bmp_button.grid(column=1, row=9, sticky=(S), padx=(100, 0), columnspan=5)
+		self.matrn_button.grid(column=1, row=9, sticky=(S), padx=(0, 120), columnspan=5)
 		self.ref_label.grid(column=2, row=5, sticky=(S, W))
 		self.ref_entry.grid(column=3, row=5, sticky=(N, E, W))
 		self.ws4.grid(column=1, row=8, sticky=(S))
@@ -286,6 +304,11 @@ class GUI:
 		self.rename_entry.grid(column=3, row=6, sticky=(N, E, W))
 		self.replace_label.grid(column=2, row=7, sticky=(S, W))
 		self.replace_entry.grid(column=3, row=7, sticky=(N, E, W))
+		# Fixing Centering for Header Buttons
+		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(35, 0))
+		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(175, 0))
+		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 162))
+		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 62))
 	
 	def bmp(self):
 		inst = PointerFix()
@@ -313,9 +336,6 @@ class GUI:
 	
 	def scripts(self):
 		inst = ScriptWin()
-	
-	def fakesoft(self):
-		pass
 
 	def options(self):
 		inst = OptWin()
