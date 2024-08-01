@@ -6,6 +6,7 @@ class PointerFix:
 	def __init__(self):
 		pass
 
+	# Copy-pasted functions from SMDBone.py
 	def options(self):
 		jsf = open('options.json', 'r')
 		js = jsf.readlines()
@@ -42,21 +43,27 @@ class PointerFix:
 			stringy += l
 		return stringy
 
+	# Pointer-fixing function
 	def rename_part(self, file, ref, torename, replace):
 		opt = self.options()
 		if opt["backup_smd"]:
 			directory = file.rstrip('.smd') + 'B.smd'
 			shutil.copy(file, directory)
+		# Reading Model SMD
 		mdl = open(file, 'r')
 		mdl_smd = self.nl_clean(mdl.readlines())
+		# Checking reference value
 		if ref.startswith('*'):
+			# If * is at the start of the line, check each pointer that ends with the specified value
 			check_end = True
 			find_spec = False
 			ref = ref[-1:]
 		elif ref.endswith('*'):
+			# Ditto with the start of each pointer
 			check_end = False
 			find_spec = False
 		else:
+			# Otherwise the program will try to find an exact name
 			find_spec = True
 			print("Format Error: '*' is not at the start nor end of reference variable")
 		count = -1

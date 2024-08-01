@@ -1,13 +1,15 @@
 import json
 from tkinter import *
 from tkinter.filedialog import askopenfilename, askdirectory
-from SMDBone import Dupe, FakeSoft
+from SMDBone import Dupe
 from SMDMat import PointerFix
 import os
 from os.path import *
 import importlib.machinery
 import importlib.util
 from pathlib import Path
+# OH MY GOD MARIO REFERENCE!!?!
+import webbrowser as browser
 
 selected_scr = ''
 scr_dat = ''
@@ -143,7 +145,7 @@ class OptWin:
 class GUI:
 	def __init__(self, root):
 		# Set Window title
-		root.title("PS's SMD Tools")
+		root.title("PostScript's SMD Tools")
 
 		# Create Window
 		frame = Frame(root, borderwidth=2, relief="sunken")
@@ -153,34 +155,37 @@ class GUI:
 
 		# Create Header Buttons
 		self.dupe_button = Button(frame, text="Bone Dupe", command=self.bd_menu)
-		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(95, 0))
+		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(110, 0))
 		
 
 		self.mat_button = Button(frame, text="Material Fix", command=self.mnc_menu)
-		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(235, 0))
+		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(250, 0))
 
 		# Getting rid of this because I don't think I could reasonably create something like this
 		"""fakeweight = Button(frame, text="Soft Weights", command=self.fakesoft)
 		fakeweight.grid(column=3, row=1, sticky=(N), padx=(0, 195))"""
 
 		self.scripts = Button(frame, text="Scripts", command=self.scripts)
-		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 223))
+		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 208))
 		
 		self.options = Button(frame, text="Options", command=self.options)
-		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 123))
+		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 108))
+
+		self.help = Button(frame, text="Help", command=self.help)
+		self.help.grid(column=3, row=1, sticky=(N), padx=(0, 20))
 
 		self.tile_label = Label(frame, text="Path to SMDs")
-		self.tile_label.grid(column=2, row=2, sticky=(S, W))
+		self.tile_label.grid(column=2, row=3, sticky=(S, W))
 
 		self.path = StringVar()
 		self.tname_entry = Entry(frame, textvariable=self.path)
-		self.tname_entry.grid(column=2, row=3, sticky=(N, E, W))
+		self.tname_entry.grid(column=3, row=3, sticky=(N, E, W))
 
 		self.save_button = Button(frame, text="File", command=self.openfile)
-		self.save_button.grid(column=3, row=3, sticky=(S), padx=(0, 80))
+		self.save_button.grid(column=4, row=3, sticky=(S), padx=(0, 50))
 
 		self.dir_button = Button(frame, text="Folder", command=self.opendir)
-		self.dir_button.grid(column=3, row=3, sticky=(S), padx=(60, 0))
+		self.dir_button.grid(column=4, row=3, sticky=(S), padx=(50, 0))
 
 		self.base_label = Label(frame, text="Select Base Bone")
 		self.base_label.grid(column=2, row=5, sticky=(S, W))
@@ -224,13 +229,19 @@ class GUI:
 		self.replace = StringVar()
 		self.replace_entry = Entry(frame, textvariable=self.replace)
 
+		# Objects to add whitespace to borders
 		ws = Label(frame, text='   ')
 		ws.grid(column=4, row=1, sticky=(S))
+		ws5 = Label(frame, text='   ')
+		ws5.grid(column=1, row=2, sticky=(S))
 		ws2 = Label(frame, text='   ')
 		ws2.grid(column=1, row=4, sticky=(S))
 		self.ws3 = Label(frame, text='   ')
 		self.ws3.grid(column=1, row=8, sticky=(S))
 		self.ws4 = Label(frame, text='   ')
+
+	def help(self):
+		browser.open_new_tab('https://google.com')
 	
 	def openfile(self):
 		self.path.set(askopenfilename(title="Select SMD"))
@@ -238,16 +249,20 @@ class GUI:
 		self.path.set(askdirectory(title="Select Anims Folder"))
 
 	def dupe(self):
+		# Initialising Bone Duping function
 		inst = Dupe()
+		# Grabbing all values from input boxes
 		loc = self.path.get()
 		base = self.b_bone.get()
 		new = self.n_bone.get()
 		parent = self.p_bone.get()
+		# Checking if specified location is a folder or file, batch dupe is performed if a folder, otherwise a single dupe is performed
 		if loc.endswith('.smd'):
 			inst.single_dupe(loc, base, new, parent)
 		else:
 			inst.batch_dupe(loc, base, new, parent)
 	def dupe_scr(self, base, new, parent):
+		# Alternate bone duping function for scripts
 		inst = Dupe()
 		loc = self.path.get()
 		if loc.endswith('.smd'):
@@ -277,10 +292,11 @@ class GUI:
 		self.replace_label.grid_remove()
 		self.replace_entry.grid_remove()
 		# Fix centering for Header buttons
-		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(95, 0))
-		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(235, 0))
-		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 223))
-		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 123))
+		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(110, 0))
+		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(250, 0))
+		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 208))
+		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 108))
+		self.help.grid(column=3, row=1, sticky=(N), padx=(0, 20))
 		
 	
 	""" Switches menu to SMD Material options """
@@ -305,23 +321,28 @@ class GUI:
 		self.replace_label.grid(column=2, row=7, sticky=(S, W))
 		self.replace_entry.grid(column=3, row=7, sticky=(N, E, W))
 		# Fixing Centering for Header Buttons
-		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(35, 0))
-		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(175, 0))
-		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 162))
-		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 62))
+		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(50, 0))
+		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(190, 0))
+		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 134))
+		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 35))
+		self.help.grid(column=3, row=1, sticky=(N), padx=(55, 0))
 	
 	def bmp(self):
+		# Initialising Pointer fix function
+		# We're using it for the .bmp extension function
 		inst = PointerFix()
 		loc = self.path.get()
 		ref = self.ref.get()
 		inst.add_bmp(loc, ref)
 	
 	def bmp_scr(self, ref):
+		# Alternate function for scripts
 		inst = PointerFix()
 		loc = self.path.get()
 		inst.add_bmp(loc, ref)
 
 	def matrename(self):
+		# Material Pointer Fixing function
 		inst = PointerFix()
 		loc = self.path.get()
 		ref = self.ref.get()
@@ -330,20 +351,25 @@ class GUI:
 		inst.rename_part(loc, ref, torename, replace)
 	
 	def matrename_scr(self, ref, torename, replace):
+		# Alternate function for scripts
 		inst = PointerFix()
 		loc = self.path.get()
 		inst.rename_part(loc, ref, torename, replace)
 	
 	def scripts(self):
+		# Opens Script selection window
 		inst = ScriptWin()
 
 	def options(self):
+		# Opens options window
 		inst = OptWin()
 	
 	def exec_script(self, script):
+		# Script parsing and execution function
 		print('Executing script')
 		values = []
 		mode = script[0]
+		# If in duping mode
 		if mode == 'd':
 			for d in script[1]:
 				if d == '-':
@@ -352,6 +378,7 @@ class GUI:
 					continue
 				else:
 					values.append(d)
+		# If in pointer fix mode
 		elif mode == 'm':
 			for d in script[1]:
 				if d == '-':
@@ -360,6 +387,7 @@ class GUI:
 					continue
 				else:
 					values.append(d)
+		# If in bitmap ext mode
 		elif mode == 'b':
 			for d in script[1]:
 				if d == '-':
@@ -368,6 +396,7 @@ class GUI:
 					continue
 				else:
 					values.append(d)
+		# If in plugin initialising mode
 		elif mode == 'p':
 			print(script)
 			filename = script[1][0]
