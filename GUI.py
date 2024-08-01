@@ -10,6 +10,7 @@ import importlib.util
 from pathlib import Path
 # OH MY GOD MARIO REFERENCE!!?!
 import webbrowser as browser
+import sys
 
 selected_scr = ''
 scr_dat = ''
@@ -162,10 +163,10 @@ class PluginWarning:
 		b_smd.grid(column=1, row=1, sticky=(S), padx=25, pady=25)
 
 		select_scr = Button(frame, text="Confirm", command=self.run_plugin)
-		select_scr.grid(column=1, row=6, sticky=(S))
+		select_scr.grid(column=1, row=6, sticky=(S), padx=(0, 75))
 
 		select_scr = Button(frame, text="Deny", command=self.deny)
-		select_scr.grid(column=2, row=6, sticky=(S))
+		select_scr.grid(column=1, row=6, sticky=(S), padx=(75, 0))
 	
 	def run_plugin(self):
 		# We do this for the plugin file as the importing function uses an absolute path (e.g. "C://something/")
@@ -185,6 +186,10 @@ class GUI:
 	def __init__(self, root):
 		# Set Window title
 		root.title("PostScript's SMD Tools")
+		if sys.platform == 'linux':
+			self.fixGUI = True
+		else:
+			self.fixGUI = False
 
 		# Create Window
 		frame = Frame(root, borderwidth=2, relief="sunken")
@@ -194,24 +199,39 @@ class GUI:
 
 		# Create Header Buttons
 		self.dupe_button = Button(frame, text="Bone Dupe", command=self.bd_menu)
-		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(110, 0))
+		if not self.fixGUI:
+			self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(110, 0))
+		else:
+			self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(110, 0))
 		
 
 		self.mat_button = Button(frame, text="Material Fix", command=self.mnc_menu)
-		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(250, 0))
+		if not self.fixGUI:
+			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(250, 0))
+		else:
+			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(316, 0))
 
 		# Getting rid of this because I don't think I could reasonably create something like this
 		"""fakeweight = Button(frame, text="Soft Weights", command=self.fakesoft)
 		fakeweight.grid(column=3, row=1, sticky=(N), padx=(0, 195))"""
 
 		self.scripts = Button(frame, text="Scripts", command=self.scripts)
-		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 208))
+		if not self.fixGUI:
+			self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 208))
+		else:
+			self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 262))
 		
 		self.options = Button(frame, text="Options", command=self.options)
-		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 108))
+		if not self.fixGUI:
+			self.options.grid(column=3, row=1, sticky=(N), padx=(0, 108))
+		else:
+			self.options.grid(column=3, row=1, sticky=(N), padx=(0, 110))
 
 		self.help = Button(frame, text="Help", command=self.help)
-		self.help.grid(column=3, row=1, sticky=(N), padx=(0, 20))
+		if not self.fixGUI:
+			self.help.grid(column=3, row=1, sticky=(N), padx=(0, 20))
+		else:
+			self.help.grid(column=3, row=1, sticky=(N), padx=(28, 0))
 
 		self.tile_label = Label(frame, text="Path to SMDs")
 		self.tile_label.grid(column=2, row=3, sticky=(S, W))
@@ -221,10 +241,16 @@ class GUI:
 		self.tname_entry.grid(column=3, row=3, sticky=(N, E, W))
 
 		self.save_button = Button(frame, text="File", command=self.openfile)
-		self.save_button.grid(column=4, row=3, sticky=(S), padx=(0, 50))
+		if not self.fixGUI:
+			self.save_button.grid(column=4, row=3, sticky=(S), padx=(0, 50))
+		else:
+			self.save_button.grid(column=4, row=3, sticky=(S), padx=(0, 75))
 
 		self.dir_button = Button(frame, text="Folder", command=self.opendir)
-		self.dir_button.grid(column=4, row=3, sticky=(S), padx=(50, 0))
+		if not self.fixGUI:
+			self.dir_button.grid(column=4, row=3, sticky=(S), padx=(50, 0))
+		else:
+			self.dir_button.grid(column=4, row=3, sticky=(S), padx=(75, 0))
 
 		self.base_label = Label(frame, text="Select Base Bone")
 		self.base_label.grid(column=2, row=5, sticky=(S, W))
@@ -332,10 +358,22 @@ class GUI:
 		self.replace_entry.grid_remove()
 		# Fix centering for Header buttons
 		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(110, 0))
-		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(250, 0))
-		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 208))
-		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 108))
-		self.help.grid(column=3, row=1, sticky=(N), padx=(0, 20))
+		if not self.fixGUI:
+			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(250, 0))
+		else:
+			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(316, 0))
+		if not self.fixGUI:
+			self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 208))
+		else:
+			self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 262))
+		if not self.fixGUI:
+			self.options.grid(column=3, row=1, sticky=(N), padx=(0, 108))
+		else:
+			self.options.grid(column=3, row=1, sticky=(N), padx=(0, 110))
+		if not self.fixGUI:
+			self.help.grid(column=3, row=1, sticky=(N), padx=(0, 20))
+		else:
+			self.help.grid(column=3, row=1, sticky=(N), padx=(28, 0))
 		
 	
 	""" Switches menu to SMD Material options """
@@ -361,10 +399,22 @@ class GUI:
 		self.replace_entry.grid(column=3, row=7, sticky=(N, E, W))
 		# Fixing Centering for Header Buttons
 		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(50, 0))
-		self.mat_button.grid(column=2, row=1, sticky=(N), padx=(190, 0))
-		self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 134))
-		self.options.grid(column=3, row=1, sticky=(N), padx=(0, 35))
-		self.help.grid(column=3, row=1, sticky=(N), padx=(55, 0))
+		if not self.fixGUI:
+			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(190, 0))
+		else:
+			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(256, 0))
+		if not self.fixGUI:
+			self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 134))
+		else:
+			self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 156))
+		if not self.fixGUI:
+			self.options.grid(column=3, row=1, sticky=(N), padx=(0, 35))
+		else:
+			self.options.grid(column=3, row=1, sticky=(N), padx=(0, 3))
+		if not self.fixGUI:
+			self.help.grid(column=3, row=1, sticky=(N), padx=(55, 0))
+		else:
+			self.help.grid(column=3, row=1, sticky=(N), padx=(134, 0))
 	
 	def bmp(self):
 		# Initialising Pointer fix function
