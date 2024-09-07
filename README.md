@@ -5,6 +5,6 @@ This function allows bone transformations to be duplicated and applied to anothe
 ## SMD Mat Fix
 This function allows SMD Material pointers to be fixed by either being able to automatically add the '.bmp' extension to every mat (or one the user chooses) or replace specified parts of the pointer (such as removing '.001' from specified pointers).
 ## Scripting!
-PS's SMD Tools have a fully functioning scripting system that allows the program to perform sophisticated functions using built-in functions of the program, for example creating sets of finger bones for multiple fingers using the Bone Duping function. Making scripts is quick and easy and there are many example scripts in the scripts folder to learn from!
+PS's SMD Tools has a fully functioning scripting system that allows the program to perform sophisticated functions using built-in functions of the program, for example creating sets of finger bones for multiple fingers using the Bone Duping function. Making scripts is quick and easy and there are many example scripts in the scripts folder to learn from!
 ## Need Help?
 Check out the wiki page for tutorials so you can learn how to properly use the tool!
