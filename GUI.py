@@ -304,6 +304,10 @@ class GUI:
 		self.ws3 = Label(frame, text='   ')
 		self.ws3.grid(column=1, row=8, sticky=(S))
 		self.ws4 = Label(frame, text='   ')
+		vnum = open('version.txt', "r")
+		ver = vnum.read()
+		version = Label(frame, text=ver)
+		version.grid(column=2, row=69, sticky=(W, S), columnspan=2)
 
 	def help(self):
 		browser.open_new_tab('https://github.com/PostScriptReal/PS-SMD-Tools/wiki')
@@ -359,7 +363,7 @@ class GUI:
 		# Fix centering for Header buttons
 		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(110, 0))
 		if not self.fixGUI:
-			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(250, 0))
+			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(280, 0))
 		else:
 			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(316, 0))
 		if not self.fixGUI:
