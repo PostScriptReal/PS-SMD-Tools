@@ -8,7 +8,7 @@ class PointerFix:
 
 	# Copy-pasted functions from SMDBone.py
 	def options(self):
-		jsf = open('options.json', 'r')
+		jsf = open('save/options.json', 'r')
 		js = jsf.readlines()
 		count = -1
 		newjs = ''

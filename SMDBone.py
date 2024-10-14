@@ -14,7 +14,7 @@ class Anim_handler:
 
 	# Unused
 	def anim_options(self):
-		jsf = open('options.json', 'r')
+		jsf = open('save/options.json', 'r')
 		js = jsf.read()
 		count = -1
 		options = json.loads(js)
@@ -123,7 +123,7 @@ class Anim_handler:
 class Dupe: 
 	# Formats options to be valid JSON (because comments are added even though JSON does not support them)
 	def options(self):
-		jsf = open('options.json', 'r')
+		jsf = open('save/options.json', 'r')
 		js = jsf.readlines()
 		count = -1
 		newjs = ''

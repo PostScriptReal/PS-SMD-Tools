@@ -1,6 +1,7 @@
 import json
 from tkinter import *
 from tkinter.filedialog import askopenfilename, askdirectory
+# from tkinter import font
 from SMDBone import Dupe
 from SMDMat import PointerFix
 import os
@@ -68,7 +69,7 @@ class ScriptWin:
 		self.nroot.title("Scripts")
 
 		frame = Frame(self.nroot, borderwidth=2, relief="sunken")
-		frame.grid(column=6, row=6, sticky=(N, E, S, W))
+		frame.grid(column=1, row=1, sticky=(N, E, S, W))
 		self.nroot.columnconfigure(1, weight=1)
 		self.nroot.rowconfigure(1, weight=1)
 
@@ -107,11 +108,11 @@ class OptWin:
 		self.nroot.title("Options")
 
 		frame = Frame(self.nroot, borderwidth=2, relief="sunken")
-		frame.grid(column=6, row=6, sticky=(N, E, S, W))
+		frame.grid(column=1, row=1, sticky=(N, E, S, W))
 		self.nroot.columnconfigure(1, weight=1)
 		self.nroot.rowconfigure(1, weight=1)
 
-		jsf = open('options.json', 'r')
+		jsf = open('save/options.json', 'r')
 		js = jsf.readlines()
 		count = -1
 		newjs = ''
@@ -127,7 +128,11 @@ class OptWin:
 		self.b_smd_val = BooleanVar(frame, value=self.options["backup_smd"])
 		print(self.b_smd_val.get())
 		b_smd = Checkbutton(frame, text="Backup SMDs", variable=self.b_smd_val, command=self.set_backup_smd)
-		b_smd.grid(column=1, row=1, sticky=(S), padx=50, pady=50)
+		b_smd.grid(column=1, row=1, sticky=(S), padx=50, pady=40)
+
+		"""self.s_vals_val = BooleanVar(frame, value=self.options["save_paths"])
+		s_vals = Checkbutton(frame, text="Save User Inputs", variable=self.s_vals_val, command=self.set_save_values)
+		s_vals.grid(column=1, row=1, sticky=(S), padx=50, pady=60)"""
 
 		select_scr = Button(frame, text="Confirm", command=self.confirm_opts)
 		select_scr.grid(column=1, row=6, sticky=(S))
@@ -136,9 +141,13 @@ class OptWin:
 		self.options["backup_smd"] = self.b_smd_val.get()
 		print(self.options["backup_smd"])
 	
+	def set_save_values(self):
+		self.options["save_paths"] = self.s_vals_val.get()
+		print(self.options["backup_smd"])
+	
 	def confirm_opts(self):
 		newjson = json.dumps(self.options, sort_keys=True, indent=5)
-		opts = open('options.json', 'w')
+		opts = open('save/options.json', 'w')
 		opts.write(newjson)
 		opts.close()
 		self.nroot.destroy()
@@ -154,7 +163,7 @@ class PluginWarning:
 		global guii
 		self.nroot.title("PLUGIN WARNING")
 		frame = Frame(self.nroot, borderwidth=2, relief="sunken")
-		frame.grid(column=6, row=6, sticky=(N, E, S, W))
+		frame.grid(column=1, row=1, sticky=(N, E, S, W))
 		self.nroot.columnconfigure(1, weight=1)
 		self.nroot.rowconfigure(1, weight=1)
 		self.filename = plugin_to_run
@@ -182,7 +191,45 @@ class PluginWarning:
 	def deny(self):
 		self.nroot.destroy()
 
+class About:
+
+	def __init__(self, ver):
+		self.nroot = Tk()
+		self.win(ver)
+		self.nroot.mainloop()
+
+	def win(self, ver):
+		self.nroot.title("About PS's SMD Tools")
+		frame = Frame(self.nroot, borderwidth=2, relief="sunken")
+		frame.grid(column=1, row=1, sticky=(N, E, S, W))
+		self.nroot.columnconfigure(1, weight=1)
+		self.nroot.rowconfigure(1, weight=1)
+
+		b_smd = Label(frame, text=f"PostScript's SMD Tools {ver}")
+		b_smd.grid(column=1, row=1, sticky=(S), padx=25, pady=25)
+
+		select_scr = Button(frame, text="Close", command=self.close)
+		select_scr.grid(column=1, row=6, sticky=(S))
+	
+	def close(self):
+		self.nroot.destroy()
+
 class GUI:
+	def get_options(self):
+		jsf = open('save/options.json', 'r')
+		js = jsf.readlines()
+		jsf.close()
+		count = -1
+		newjs = ''
+		for l in js:
+			if l.find('//') != -1:
+				js.pop(count)
+				continue
+			newjs += l
+		if not js[len(js)-1] == '}':
+			newjs += '}'
+		self.options = json.loads(newjs)
+
 	def __init__(self, root):
 		# Set Window title
 		root.title("PostScript's SMD Tools")
@@ -190,113 +237,112 @@ class GUI:
 			self.fixGUI = True
 		else:
 			self.fixGUI = False
+		# print(font.nametofont('TkDefaultFont').actual())
+		
+		# Get Options
+		self.get_options()
+		if self.options["save_paths"]:
+			self.save_paths = True
+			js = open("save/paths.json", 'r')
+			self.sPaths = json.loads(js.read())
+			self.bonez = self.sPaths["bonez"]
+			self.matfix = self.sPaths["matFix"]
+		else:
+			self.save_paths = False
 
 		# Create Window
 		frame = Frame(root, borderwidth=2, relief="sunken")
-		frame.grid(column=6, row=6, sticky=(N, E, S, W))
-		root.columnconfigure(1, weight=1)
-		root.rowconfigure(1, weight=1)
+		frame.grid(column=6, row=2, sticky=(N, E, S, W))
+		header = Frame(frame, borderwidth=2)
+		header.grid(column=1, row=1, sticky=(N), columnspan=10)
+		mtbtns = Frame(frame, borderwidth=2)
+		mtbtns.grid(column=1, row=9, sticky=(S), columnspan=10)
+		root.columnconfigure(6, weight=1)
+		root.rowconfigure(2, weight=1)
 
 		# Create Header Buttons
-		self.dupe_button = Button(frame, text="Bone Dupe", command=self.bd_menu)
-		if not self.fixGUI:
-			self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(110, 0))
-		else:
-			self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(110, 0))
-		
+		self.dupe_button = Button(header, text="Bone Dupe", command=self.bd_menu)
+		self.dupe_button.grid(column=1, row=1, sticky=(N))
 
-		self.mat_button = Button(frame, text="Material Fix", command=self.mnc_menu)
-		if not self.fixGUI:
-			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(250, 0))
-		else:
-			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(316, 0))
+		self.mat_button = Button(header, text="Material Fix", command=self.mnc_menu)
+		self.mat_button.grid(column=2, row=1, sticky=(N))
 
 		# Getting rid of this because I don't think I could reasonably create something like this
 		"""fakeweight = Button(frame, text="Soft Weights", command=self.fakesoft)
 		fakeweight.grid(column=3, row=1, sticky=(N), padx=(0, 195))"""
 
-		self.scripts = Button(frame, text="Scripts", command=self.scripts)
-		if not self.fixGUI:
-			self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 208))
-		else:
-			self.scripts.grid(column=3, row=1, sticky=(N), padx=(0, 262))
+		self.scripts = Button(header, text="Scripts", command=self.scripts)
+		self.scripts.grid(column=3, row=1, sticky=(N))
 		
-		self.options = Button(frame, text="Options", command=self.options)
-		if not self.fixGUI:
-			self.options.grid(column=3, row=1, sticky=(N), padx=(0, 108))
-		else:
-			self.options.grid(column=3, row=1, sticky=(N), padx=(0, 110))
+		self.options = Button(header, text="Options", command=self.optionsMenu)
+		self.options.grid(column=5, row=1, sticky=(N))
 
-		self.help = Button(frame, text="Help", command=self.help)
-		if not self.fixGUI:
-			self.help.grid(column=3, row=1, sticky=(N), padx=(0, 20))
-		else:
-			self.help.grid(column=3, row=1, sticky=(N), padx=(28, 0))
+		self.help = Button(header, text="Help", command=self.help)
+		self.help.grid(column=6, row=1, sticky=(N))
+		
+		self.aboutB = Button(header, text="About", command=self.about)
+		self.aboutB.grid(column=4, row=1, sticky=(N))
 
 		self.tile_label = Label(frame, text="Path to SMDs")
-		self.tile_label.grid(column=2, row=3, sticky=(S, W))
+		self.tile_label.grid(column=2, row=3, sticky=(S))
 
 		self.path = StringVar()
-		self.tname_entry = Entry(frame, textvariable=self.path)
+		if self.save_paths and not self.bonez["path"] == "":
+			self.path.set(self.bonez["path"])
+		self.tname_entry = Entry(frame, textvariable=self.path, width=50)
 		self.tname_entry.grid(column=3, row=3, sticky=(N, E, W))
 
 		self.save_button = Button(frame, text="File", command=self.openfile)
-		if not self.fixGUI:
-			self.save_button.grid(column=4, row=3, sticky=(S), padx=(0, 50))
-		else:
-			self.save_button.grid(column=4, row=3, sticky=(S), padx=(0, 75))
+		self.save_button.grid(column=5, row=3, sticky=(S))
 
 		self.dir_button = Button(frame, text="Folder", command=self.opendir)
-		if not self.fixGUI:
-			self.dir_button.grid(column=4, row=3, sticky=(S), padx=(50, 0))
-		else:
-			self.dir_button.grid(column=4, row=3, sticky=(S), padx=(75, 0))
+		self.dir_button.grid(column=7, row=3, sticky=(S))
 
 		self.base_label = Label(frame, text="Select Base Bone")
-		self.base_label.grid(column=2, row=5, sticky=(S, W))
+		self.base_label.grid(column=2, row=5, sticky=(S))
 
 		self.b_bone = StringVar()
-		self.bname_entry = Entry(frame, textvariable=self.b_bone)
-		self.bname_entry.grid(column=3, row=5, sticky=(N, E, W))
+		self.bname_entry = Entry(frame, textvariable=self.b_bone, width=50)
+		self.bname_entry.grid(column=3, row=5, sticky=(N))
 
 		self.new_label = Label(frame, text="Select New Bone")
-		self.new_label.grid(column=2, row=6, sticky=(S, W))
+		self.new_label.grid(column=2, row=6, sticky=(S))
 
 		self.n_bone = StringVar()
-		self.nname_entry = Entry(frame, textvariable=self.n_bone)
-		self.nname_entry.grid(column=3, row=6, sticky=(N, E, W))
+		self.nname_entry = Entry(frame, textvariable=self.n_bone, width=50)
+		self.nname_entry.grid(column=3, row=6, sticky=(N))
 
 		self.parent_label = Label(frame, text="Select Parent Bone")
-		self.parent_label.grid(column=2, row=7, sticky=(S, W))
+		self.parent_label.grid(column=2, row=7, sticky=(S))
 
 		self.p_bone = StringVar()
-		self.pname_entry = Entry(frame, textvariable=self.p_bone)
+		self.pname_entry = Entry(frame, textvariable=self.p_bone, width=50)
 		self.pname_entry.grid(column=3, row=7, sticky=(N, E, W))
 
-		self.action_button = Button(frame, text="Dupe", command=self.dupe)
-		self.action_button.grid(column=1, row=9, sticky=(S), padx=(0, 0), columnspan=5)
+		self.action_button = Button(mtbtns, text="Dupe", command=self.dupe)
+		self.action_button.grid(column=1, row=9, sticky=(S))
 
-		self.bmp_button = Button(frame, text="File Ext", command=self.bmp)
-		self.matrn_button = Button(frame, text="Fix Pointer", command=self.matrename)
+		self.bmp_button = Button(mtbtns, text="File Ext", command=self.bmp)
+		self.matrn_button = Button(mtbtns, text="Fix Pointer", command=self.matrename)
 
 		self.ref_label = Label(frame, text="Type Finder Value")
 
 		self.ref = StringVar()
-		self.ref_entry = Entry(frame, textvariable=self.ref)
+		self.ref_entry = Entry(frame, textvariable=self.ref, width=50)
 
 		self.rename_label = Label(frame, text="String Part To Rename")
 
 		self.rename = StringVar()
-		self.rename_entry = Entry(frame, textvariable=self.rename)
+		self.rename_entry = Entry(frame, textvariable=self.rename, width=50)
 
 		self.replace_label = Label(frame, text="String Part To Replace")
 
 		self.replace = StringVar()
-		self.replace_entry = Entry(frame, textvariable=self.replace)
+		self.replace_entry = Entry(frame, textvariable=self.replace, width=50)
 
 		# Objects to add whitespace to borders
 		ws = Label(frame, text='   ')
-		ws.grid(column=4, row=1, sticky=(S))
+		ws.grid(column=8, row=1, sticky=(S))
 		ws5 = Label(frame, text='   ')
 		ws5.grid(column=1, row=2, sticky=(S))
 		ws2 = Label(frame, text='   ')
@@ -304,18 +350,28 @@ class GUI:
 		self.ws3 = Label(frame, text='   ')
 		self.ws3.grid(column=1, row=8, sticky=(S))
 		self.ws4 = Label(frame, text='   ')
+		self.ws6 = Label(mtbtns, text='       ')
+		ws7 = Label(frame, text='   ')
+		ws7.grid(column=4, row=3, sticky=(S))
+		ws8 = Label(frame, text='   ')
+		ws8.grid(column=6, row=3, sticky=(S))
 		vnum = open('version.txt', "r")
-		ver = vnum.read()
-		version = Label(frame, text=ver)
+		self.ver = vnum.read().replace("(OS)", sys.platform)
+		version = Label(frame, text=self.ver)
 		version.grid(column=2, row=69, sticky=(W, S), columnspan=2)
 
 	def help(self):
 		browser.open_new_tab('https://github.com/PostScriptReal/PS-SMD-Tools/wiki')
 	
+	def about(self):
+		a = About(self.ver)
+	
 	def openfile(self):
-		self.path.set(askopenfilename(title="Select SMD"))
+		startdir = self.options["startFolder"]
+		self.path.set(askopenfilename(title="Select SMD", initialdir=startdir))
 	def opendir(self):
-		self.path.set(askdirectory(title="Select Anims Folder"))
+		startdir = self.options["startFolder"]
+		self.path.set(askdirectory(title="Select Anims Folder", initialdir=startdir))
 
 	def dupe(self):
 		# Initialising Bone Duping function
@@ -360,8 +416,9 @@ class GUI:
 		self.rename_entry.grid_remove()
 		self.replace_label.grid_remove()
 		self.replace_entry.grid_remove()
+		self.ws6.grid_remove()
 		# Fix centering for Header buttons
-		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(110, 0))
+		"""self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(110, 0))
 		if not self.fixGUI:
 			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(280, 0))
 		else:
@@ -377,7 +434,7 @@ class GUI:
 		if not self.fixGUI:
 			self.help.grid(column=3, row=1, sticky=(N), padx=(0, 20))
 		else:
-			self.help.grid(column=3, row=1, sticky=(N), padx=(28, 0))
+			self.help.grid(column=3, row=1, sticky=(N), padx=(28, 0))"""
 		
 	
 	""" Switches menu to SMD Material options """
@@ -392,9 +449,10 @@ class GUI:
 		self.action_button.grid_remove()
 		self.ws3.grid_remove()
 		# Displaying SMD Mat options
-		self.bmp_button.grid(column=1, row=9, sticky=(S), padx=(100, 0), columnspan=5)
-		self.matrn_button.grid(column=1, row=9, sticky=(S), padx=(0, 120), columnspan=5)
-		self.ref_label.grid(column=2, row=5, sticky=(S, W))
+		self.bmp_button.grid(column=0, row=9, sticky=(S))
+		self.ws6.grid(column=1, row=9, sticky=(S))
+		self.matrn_button.grid(column=2, row=9, sticky=(S))
+		self.ref_label.grid(column=2, row=5, sticky=(S))
 		self.ref_entry.grid(column=3, row=5, sticky=(N, E, W))
 		self.ws4.grid(column=1, row=8, sticky=(S))
 		self.rename_label.grid(column=2, row=6, sticky=(S, W))
@@ -402,7 +460,7 @@ class GUI:
 		self.replace_label.grid(column=2, row=7, sticky=(S, W))
 		self.replace_entry.grid(column=3, row=7, sticky=(N, E, W))
 		# Fixing Centering for Header Buttons
-		self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(50, 0))
+		"""self.dupe_button.grid(column=2, row=1, sticky=(N), padx=(50, 0))
 		if not self.fixGUI:
 			self.mat_button.grid(column=2, row=1, sticky=(N), padx=(190, 0))
 		else:
@@ -418,7 +476,7 @@ class GUI:
 		if not self.fixGUI:
 			self.help.grid(column=3, row=1, sticky=(N), padx=(55, 0))
 		else:
-			self.help.grid(column=3, row=1, sticky=(N), padx=(134, 0))
+			self.help.grid(column=3, row=1, sticky=(N), padx=(134, 0))"""
 	
 	def bmp(self):
 		# Initialising Pointer fix function
@@ -453,9 +511,10 @@ class GUI:
 		# Opens Script selection window
 		inst = ScriptWin()
 
-	def options(self):
+	def optionsMenu(self):
 		# Opens options window
 		inst = OptWin()
+		print("CLICKED")
 	
 	def exec_script(self, script):
 		# Script parsing and execution function

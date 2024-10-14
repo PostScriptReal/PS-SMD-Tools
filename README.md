@@ -1,4 +1,4 @@
-# PS's SMD Tools
+# PostScript's SMD Tools
 This is a program I created that allows for manipulation of animation and model SMD files (Goldsrc only), allowing transformations of other bones to be copied and applied to another and allowing material pointers in model SMDs to be fixed.
 ## SMD Bone Duping
 This function allows bone transformations to be duplicated and applied to another bone found in the armature (new bones cannot be created by the program), this can, for example, allow for easily creating bones for individual fingers instead of rigging 4 fingers to one set of finger bones.
