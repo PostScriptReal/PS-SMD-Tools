@@ -1,0 +1,1 @@
+ pyinstaller --noconfirm --onedir --console --icon "/home/postscript/Desktop/Github Repos/PS-s-SMD-Tools/icon-linux.svg" --name "SMDTools" --add-data "/home/postscript/Desktop/Github Repos/PS-s-SMD-Tools/

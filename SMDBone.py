@@ -125,15 +125,7 @@ class Dupe:
 	def options(self):
 		jsf = open('save/options.json', 'r')
 		js = jsf.readlines()
-		count = -1
-		newjs = ''
-		for l in js:
-			if l.find('//') != -1:
-				js.pop(count)
-				continue
-			newjs += l
-		newjs += '}'
-		options = json.loads(newjs)
+		options = json.loads(js)
 		return options
 
 	# nl_clean removes the \n (new line) character from every object in the array

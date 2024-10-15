@@ -114,16 +114,7 @@ class OptWin:
 
 		jsf = open('save/options.json', 'r')
 		js = jsf.readlines()
-		count = -1
-		newjs = ''
-		for l in js:
-			if l.find('//') != -1:
-				js.pop(count)
-				continue
-			newjs += l
-		if not js[len(js)-1] == '}':
-			newjs += '}'
-		self.options = json.loads(newjs)
+		self.options = json.loads(js)
 
 		self.b_smd_val = BooleanVar(frame, value=self.options["backup_smd"])
 		print(self.b_smd_val.get())
@@ -514,7 +505,6 @@ class GUI:
 	def optionsMenu(self):
 		# Opens options window
 		inst = OptWin()
-		print("CLICKED")
 	
 	def exec_script(self, script):
 		# Script parsing and execution function
