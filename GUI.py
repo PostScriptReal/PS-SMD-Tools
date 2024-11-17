@@ -418,11 +418,13 @@ class GUI:
 		a = About(self.ver)
 	
 	def openfile(self):
-		startdir = self.options["startFolder"]
-		self.path.set(askopenfilename(title="Select SMD", initialdir=startdir))
+		# startdir = self.options["startFolder"]
+		startDir = os.path.expanduser("~/Documents")
+		self.path.set(askopenfilename(title="Select SMD", initialdir=startDir))
 	def opendir(self):
-		startdir = self.options["startFolder"]
-		self.path.set(askdirectory(title="Select Anims Folder", initialdir=startdir))
+		# startdir = self.options["startFolder"]
+		startDir = os.path.expanduser("~/Documents")
+		self.path.set(askdirectory(title="Select Anims Folder", initialdir=startDir))
 
 	def dupe(self):
 		# Initialising Bone Duping function
@@ -449,11 +451,11 @@ class GUI:
 	""" Switches menu to the Bone Dupe Menu """
 	def bd_menu(self):
 		# Displaying Bone Dupe options
-		self.base_label.grid(column=2, row=5, sticky=(S, W))
+		self.base_label.grid(column=2, row=5, sticky=(S))
 		self.bname_entry.grid(column=3, row=5, sticky=(N, E, W))
-		self.new_label.grid(column=2, row=6, sticky=(S, W))
+		self.new_label.grid(column=2, row=6, sticky=(S,))
 		self.nname_entry.grid(column=3, row=6, sticky=(N, E, W))
-		self.parent_label.grid(column=2, row=7, sticky=(S, W))
+		self.parent_label.grid(column=2, row=7, sticky=(S))
 		self.pname_entry.grid(column=3, row=7, sticky=(N, E, W))
 		self.action_button.grid(column=1, row=9, sticky=(S), padx=(0, 0), columnspan=5)
 		self.ws3.grid(column=1, row=8, sticky=(S))

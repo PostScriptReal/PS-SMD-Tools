@@ -1,0 +1,89 @@
+{
+ "version": "auto-py-to-exe-configuration_v1",
+ "pyinstallerOptions": [
+  {
+   "optionDest": "noconfirm",
+   "value": true
+  },
+  {
+   "optionDest": "filenames",
+   "value": "C:/Users/pyinstaller-win/Desktop/PS-s-SMD-Tools/GUI.py"
+  },
+  {
+   "optionDest": "onefile",
+   "value": false
+  },
+  {
+   "optionDest": "console",
+   "value": true
+  },
+  {
+   "optionDest": "icon_file",
+   "value": "C:/Users/pyinstaller-win/Desktop/PS-s-SMD-Tools/icon-win.ico"
+  },
+  {
+   "optionDest": "name",
+   "value": "SMDToolsWin"
+  },
+  {
+   "optionDest": "clean_build",
+   "value": false
+  },
+  {
+   "optionDest": "strip",
+   "value": false
+  },
+  {
+   "optionDest": "noupx",
+   "value": false
+  },
+  {
+   "optionDest": "hide_console",
+   "value": "hide-early"
+  },
+  {
+   "optionDest": "disable_windowed_traceback",
+   "value": false
+  },
+  {
+   "optionDest": "uac_admin",
+   "value": false
+  },
+  {
+   "optionDest": "uac_uiaccess",
+   "value": false
+  },
+  {
+   "optionDest": "argv_emulation",
+   "value": false
+  },
+  {
+   "optionDest": "bootloader_ignore_signals",
+   "value": false
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/pyinstaller-win/Desktop/PS-s-SMD-Tools/save;save/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/pyinstaller-win/Desktop/PS-s-SMD-Tools/scripts;scripts/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/pyinstaller-win/Desktop/PS-s-SMD-Tools/LICENSE;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/pyinstaller-win/Desktop/PS-s-SMD-Tools/README.md;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/pyinstaller-win/Desktop/PS-s-SMD-Tools/version.txt;."
+  }
+ ],
+ "nonPyinstallerOptions": {
+  "increaseRecursionLimit": true,
+  "manualArguments": ""
+ }
+}
