@@ -12,9 +12,15 @@ from pathlib import Path
 # OH MY GOD MARIO REFERENCE!!?!
 import webbrowser as browser
 import sys
+from urllib.request import urlopen
 
 selected_scr = ''
 scr_dat = ''
+
+class Flags:
+
+    def __init__(self):
+        self.pyinstaller = True
 
 class Interp:
 
@@ -46,8 +52,6 @@ class Interp:
 			self.mode = 'm'
 		elif scr[0] == 'mode bmp':
 			self.mode = 'b'
-		elif scr[0] == 'mode plugin':
-			self.mode = 'p'
 		else:
 			self.mode = None
 		print("Before: "+ str(scr))
@@ -74,8 +78,11 @@ class ScriptWin:
 		self.nroot.rowconfigure(1, weight=1)
 
 		self.scripts = []
-		script_dir = Path(os.sys.path[0])
-		scr_dir = str(script_dir.joinpath('scripts'))
+		if getattr(sys, 'frozen', False):
+			EXE_LOCATION = os.path.dirname( sys.executable )
+		else:
+			EXE_LOCATION = os.path.dirname( os.path.realpath( __file__ ) )
+		scr_dir = os.path.join(EXE_LOCATION, "scripts")
 		for s in os.listdir(scr_dir):
 			self.scripts.append(s.replace('.txt', ''))
 		print(self.scripts)
@@ -113,7 +120,7 @@ class OptWin:
 		self.nroot.rowconfigure(1, weight=1)
 
 		jsf = open('save/options.json', 'r')
-		js = jsf.readlines()
+		js = jsf.read()
 		self.options = json.loads(js)
 
 		self.b_smd_val = BooleanVar(frame, value=self.options["backup_smd"])
@@ -143,7 +150,7 @@ class OptWin:
 		opts.close()
 		self.nroot.destroy()
 
-class PluginWarning:
+"""class PluginWarning:
 
 	def __init__(self, plugin_to_run):
 		self.nroot = Tk()
@@ -169,6 +176,7 @@ class PluginWarning:
 		select_scr.grid(column=1, row=6, sticky=(S), padx=(75, 0))
 	
 	def run_plugin(self):
+		self.nroot.destroy()
 		# We do this for the plugin file as the importing function uses an absolute path (e.g. "C://something/")
 		script_dir = Path(__file__).parent
 		mymodule_path = str(script_dir.joinpath('plugins', self.filename + '.py'))
@@ -177,9 +185,48 @@ class PluginWarning:
 		plugin = importlib.util.spec_from_loader(self.filename, loader)
 		exec_plugin = importlib.util.module_from_spec(plugin)
 		loader.exec_module(exec_plugin)
-		self.nroot.destroy()
 	
 	def deny(self):
+		self.nroot.destroy()"""
+
+class GetNewVersion:
+
+	def __init__(self, version):
+		self.nroot = Tk()
+		v = version.split("-")[0]
+		self.win(v)
+		self.nroot.mainloop()
+
+	def win(self, ver):
+		self.nroot.title(f"Version {ver} is out!")
+
+		frame = Frame(self.nroot, borderwidth=2, relief="sunken")
+		frame.grid(column=1, row=1, sticky=(N, E, S, W))
+		self.nroot.columnconfigure(1, weight=1)
+		self.nroot.rowconfigure(1, weight=1)
+		buttons = Frame(frame, borderwidth=2)
+		buttons.grid(column=1, row=1, sticky=(S), columnspan=10)
+
+		text = Label(frame, text="A new version of PostScript's SMD Tools has been released,\n do you want to update to the new version?")
+		text.grid(column=1, row=0, padx=50, pady=40)
+
+		self.dlButton = Button(buttons, text="Yes", command=self.releasesPage)
+		self.dlButton.grid(column=0, row=1, sticky=(S))
+		self.noButton = Button(buttons, text="No", command=self.closeWin)
+		self.noButton.grid(column=1, row=1, sticky=(S))
+	
+	def releasesPage(self):
+		browser.open_new_tab("https://github.com/PostScriptReal/PS-SMD-Tools/releases/latest")
+		self.nroot.destroy()
+	
+	def closeWin(self):
+		self.nroot.destroy()
+	
+	def confirm_opts(self):
+		newjson = json.dumps(self.options, sort_keys=True, indent=5)
+		opts = open('save/options.json', 'w')
+		opts.write(newjson)
+		opts.close()
 		self.nroot.destroy()
 
 class About:
@@ -208,7 +255,7 @@ class About:
 class GUI:
 	def get_options(self):
 		jsf = open('save/options.json', 'r')
-		js = jsf.readlines()
+		js = jsf.read()
 		jsf.close()
 		count = -1
 		newjs = ''
@@ -220,6 +267,18 @@ class GUI:
 		if not js[len(js)-1] == '}':
 			newjs += '}'
 		self.options = json.loads(newjs)
+	
+	def check_version(self):
+		url = "https://github.com/PostScriptReal/PS-SMD-Tools/raw/refs/heads/main/version.txt"
+		webVer = urlopen(url).read().decode('utf-8')
+		print(webVer)
+
+		# Don't you dare make a Fortnite joke
+		vFile = open("version.txt", "r")
+		curVer = vFile.read()
+
+		if curVer != webVer:
+			a = GetNewVersion(webVer)
 
 	def __init__(self, root):
 		# Set Window title
@@ -350,6 +409,7 @@ class GUI:
 		self.ver = vnum.read().replace("(OS)", sys.platform)
 		version = Label(frame, text=self.ver)
 		version.grid(column=2, row=69, sticky=(W, S), columnspan=2)
+		self.check_version()
 
 	def help(self):
 		browser.open_new_tab('https://github.com/PostScriptReal/PS-SMD-Tools/wiki')
@@ -538,11 +598,11 @@ class GUI:
 					continue
 				else:
 					values.append(d)
-		# If in plugin initialising mode
+		"""# If in plugin initialising mode
 		elif mode == 'p':
 			print(script)
 			filename = script[1][0]
-			w = PluginWarning(filename)
+			w = PluginWarning(filename)"""
 
 
 
