@@ -9,16 +9,8 @@ class PointerFix:
 	# Copy-pasted functions from SMDBone.py
 	def options(self):
 		jsf = open('save/options.json', 'r')
-		js = jsf.readlines()
-		count = -1
-		newjs = ''
-		for l in js:
-			if l.find('//') != -1:
-				js.pop(count)
-				continue
-			newjs += l
-		newjs += '}'
-		options = json.loads(newjs)
+		js = jsf.read()
+		options = json.loads(js)
 		return options
 
 	# nl_clean removes the \n (new line) character from every object in an array
@@ -52,6 +44,8 @@ class PointerFix:
 		# Reading Model SMD
 		mdl = open(file, 'r')
 		mdl_smd = self.nl_clean(mdl.readlines())
+		check_end = False
+		find_spec = False
 		# Checking reference value
 		if ref.startswith('*'):
 			# If * is at the start of the line, check each pointer that ends with the specified value
