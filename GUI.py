@@ -334,13 +334,13 @@ class GUI:
 		self.aboutB.grid(column=4, row=1, sticky=(N))
 
 		self.tile_label = Label(frame, text="Path to SMDs")
-		self.tile_label.grid(column=2, row=3, sticky=(S))
+		self.tile_label.grid(column=2, row=3)
 
 		self.path = StringVar()
 		if self.save_paths and not self.bonez["path"] == "":
 			self.path.set(self.bonez["path"])
 		self.tname_entry = Entry(frame, textvariable=self.path, width=50)
-		self.tname_entry.grid(column=3, row=3, sticky=(N, E, W))
+		self.tname_entry.grid(column=3, row=3, sticky=(E, W))
 
 		self.save_button = Button(frame, text="File", command=self.openfile)
 		self.save_button.grid(column=5, row=3, sticky=(S))
