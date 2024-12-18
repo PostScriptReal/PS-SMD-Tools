@@ -124,7 +124,7 @@ class Dupe:
 	# Formats options to be valid JSON (because comments are added even though JSON does not support them)
 	def options(self):
 		jsf = open('save/options.json', 'r')
-		js = jsf.readlines()
+		js = jsf.read()
 		options = json.loads(js)
 		return options
 
