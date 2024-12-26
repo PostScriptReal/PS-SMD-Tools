@@ -22,7 +22,7 @@ class Flags:
 
 	def __init__(self):
 		self.pyinstaller = True
-		self.devMode = True
+		self.devMode = False
 
 class Interp:
 
