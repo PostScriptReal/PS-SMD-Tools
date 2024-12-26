@@ -19,7 +19,7 @@ jobs:
           pip install pyinstaller
       - name: Run PyInstaller
         run: |
-          pyinstaller --noconfirm --onedir --console --icon "/home/postscript/Desktop/Github Repos/PS-s-SMD-Tools/icon-win.ico" --name "SMDTools" --add-data "/home/postscript/Desktop/Github Repos/PS-s-SMD-Tools/version.txt:." --add-data "/home/postscript/Desktop/Github Repos/PS-s-SMD-Tools/LICENSE:." --add-data "/home/postscript/Desktop/Github Repos/PS-s-SMD-Tools/README.md:." --add-data "/home/postscript/Desktop/Github Repos/PS-s-SMD-Tools/save:save/" --add-data "/home/postscript/Desktop/Github Repos/PS-s-SMD-Tools/scripts:scripts/"  "/home/postscript/Desktop/Github Repos/PS-s-SMD-Tools/GUI.py"
+          pyinstaller --noconfirm --onedir --console --icon "icon-win.ico" --name "SMDTools" --add-data "version.txt:." --add-data "LICENSE:." --add-data "README.md:." --add-data "save:save/" --add-data "scripts:scripts/"  "GUI.py"
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
