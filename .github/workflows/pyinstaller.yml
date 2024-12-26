@@ -24,4 +24,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: SMDTools110
-          path: dist/SMDTools110
+          path: dist/SMDTools
