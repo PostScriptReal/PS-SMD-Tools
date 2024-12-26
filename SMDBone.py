@@ -3,6 +3,7 @@ import json
 from os.path import basename
 import os
 import shutil
+import sys
 
 bones = []
 
@@ -96,11 +97,13 @@ class Anim_handler:
 
 	# Rips bone transformation
 	def rip_trans(self, b_id):
+		print(b_id)
 		for b in self.frame:
 			if b.startswith(str(b_id)):
 				filtered_id = str(b_id)
 				line = b
-				line = b.lstrip(filtered_id)
+				line = b.replace(filtered_id, '')
+				print(line)
 				line = line.split(' ')
 				line.pop(0)
 				# line.pop(3)
@@ -164,9 +167,9 @@ class Dupe:
 		global bones
 		indx = ''
 		for b in bones:
-			if b.find(ref) != -1:
+			if b.find(f"\"{ref}\"") != -1:
 				for c in b:
-					if c == '"':
+					if c == '\"':
 						break
 					indx += c
 		try:
@@ -335,8 +338,16 @@ class Dupe:
 		opts = self.options()
 		# Backs up the whole directory in case something goes wrong in the batch_dupe
 		if opts["backup_smd"]:
-			directory = smd + 'B'
-			shutil.copy(smd, directory)
+			directory = ''
+			if sys.platform == 'win32':
+				directory = smd + 'B'
+			else:
+				directory = smd[:-1] + 'B/'
+				print(directory)
+			try:
+				shutil.copytree(smd, directory)
+			except:
+				pass
 		# Looping through all smd files
 		for folderName, subfolders, filenames in os.walk(smd):
 			for filename in filenames:
@@ -417,8 +428,11 @@ class Dupe:
 		smd_file = open(smd)
 		# Checking if the backup smd option is enabled and then backing up the smd
 		if opts["backup_smd"]:
-			directory = smd.rstrip('.smd') + 'B.smd'
-			shutil.copy(smd, directory)
+			directory = smd.replace('.smd', 'B.smd')
+			try:
+				shutil.copy(smd, directory)
+			except:
+				pass
 		# Reading the smd and removing \n because the readlines() function is dumb
 		raw_contents = smd_file.readlines()
 		smd_contents = self.nl_clean(raw_contents)
@@ -427,15 +441,15 @@ class Dupe:
 
 		t_bone = None
 
-		p_bone = self.return_bone_index(p_bone)
+		pp_bone = self.return_bone_index(p_bone)
 		# Again please reference bones already in the smd, the program does NOT support creating new bones
 		if self.find_bone_index(n_bone) == None:
-			bones.append(str(len(bones))+ ' '  + '"'+ n_bone + '"' + ' ' + str(p_bone))
+			bones.append(str(len(bones))+ ' '  + '"'+ n_bone + '"' + ' ' + str(pp_bone))
 		else:
 			print('Bone already exists, skip adding a new bone to the bone id list.')
 			t_bone = self.return_bone_index(n_bone)
 			t_bone_parent = self.get_bone_parent(t_bone)
-			b_bone = self.return_bone_index(b_bone)
+			bb_bone = self.return_bone_index(b_bone)
 			print('Bone id: '+ str(t_bone))
 			print('Bone to copy: '+ str(b_bone))
 		# print(str(smd_contents.readlines()))
@@ -466,7 +480,7 @@ class Dupe:
 		frames.pop(0)
 		# frames[0].rip_trans(b_bone)
 		for f in frames:
-			t = f.rip_trans(b_bone)
+			t = f.rip_trans(bb_bone)
 			# print(str(t_bone) + str(t))
 			thingyy = self.add_spaces(t)
 			new_thing = str(t_bone) + thingyy

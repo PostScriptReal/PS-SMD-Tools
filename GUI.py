@@ -13,14 +13,16 @@ from pathlib import Path
 import webbrowser as browser
 import sys
 from urllib.request import urlopen
+from utils import *
 
 selected_scr = ''
 scr_dat = ''
 
 class Flags:
 
-    def __init__(self):
-        self.pyinstaller = True
+	def __init__(self):
+		self.pyinstaller = True
+		self.devMode = True
 
 class Interp:
 
@@ -252,7 +254,7 @@ class About:
 	def close(self):
 		self.nroot.destroy()
 
-class GUI:
+class GUI(Tk):
 	def get_options(self):
 		jsf = open('save/options.json', 'r')
 		js = jsf.read()
@@ -280,9 +282,11 @@ class GUI:
 		if curVer != webVer:
 			a = GetNewVersion(webVer)
 
-	def __init__(self, root):
+	def __init__(self):
+		super().__init__()
+		self.flags = Flags()
 		# Set Window title
-		root.title("PostScript's SMD Tools")
+		self.title("PostScript's SMD Tools")
 		if sys.platform == 'linux':
 			self.fixGUI = True
 		else:
@@ -301,14 +305,14 @@ class GUI:
 			self.save_paths = False
 
 		# Create Window
-		frame = Frame(root, borderwidth=2, relief="sunken")
+		frame = Frame(self, borderwidth=2, relief="sunken")
 		frame.grid(column=6, row=2, sticky=(N, E, S, W))
 		header = Frame(frame, borderwidth=2)
 		header.grid(column=1, row=1, sticky=(N), columnspan=10)
 		mtbtns = Frame(frame, borderwidth=2)
 		mtbtns.grid(column=1, row=9, sticky=(S), columnspan=10)
-		root.columnconfigure(6, weight=1)
-		root.rowconfigure(2, weight=1)
+		self.columnconfigure(6, weight=1)
+		self.rowconfigure(2, weight=1)
 
 		# Create Header Buttons
 		self.dupe_button = Button(header, text="Bone Dupe", command=self.bd_menu)
@@ -342,11 +346,11 @@ class GUI:
 		self.tname_entry = Entry(frame, textvariable=self.path, width=50)
 		self.tname_entry.grid(column=3, row=3, sticky=(E, W))
 
-		self.save_button = Button(frame, text="File", command=self.openfile)
+		self.save_button = Button(frame, text="Open QC", command=self.openfile)
 		self.save_button.grid(column=5, row=3, sticky=(S))
 
-		self.dir_button = Button(frame, text="Folder", command=self.opendir)
-		self.dir_button.grid(column=7, row=3, sticky=(S))
+		"""self.dir_button = Button(frame, text="Open Folder", command=self.opendir)
+		self.dir_button.grid(column=7, row=3, sticky=(S))"""
 
 		self.base_label = Label(frame, text="Select Base Bone")
 		self.base_label.grid(column=2, row=5, sticky=(S))
@@ -409,7 +413,8 @@ class GUI:
 		self.ver = vnum.read().replace("(OS)", sys.platform)
 		version = Label(frame, text=self.ver)
 		version.grid(column=2, row=69, sticky=(W, S), columnspan=2)
-		self.check_version()
+		if not self.flags.devMode:
+			self.check_version()
 
 	def help(self):
 		browser.open_new_tab('https://github.com/PostScriptReal/PS-SMD-Tools/wiki')
@@ -420,7 +425,13 @@ class GUI:
 	def openfile(self):
 		# startdir = self.options["startFolder"]
 		startDir = os.path.expanduser("~/Documents")
-		self.path.set(askopenfilename(title="Select SMD", initialdir=startDir))
+		fileTypes = [("Quake Compile Files", "*.qc"), ("All Files", "*.*")]
+		self.path.set(askopenfilename(title="Select QC", initialdir=startDir, filetypes=fileTypes))
+		self.qcDATA = QCHandler(self.path.get())
+		self.qcDATA.get_bodygroups()
+		self.qcDATA.getAnimFolder()
+		self.mdls = self.qcDATA.bodies
+		self.anims = self.qcDATA.animPath
 	def opendir(self):
 		# startdir = self.options["startFolder"]
 		startDir = os.path.expanduser("~/Documents")
@@ -430,23 +441,20 @@ class GUI:
 		# Initialising Bone Duping function
 		inst = Dupe()
 		# Grabbing all values from input boxes
-		loc = self.path.get()
-		base = self.b_bone.get()
-		new = self.n_bone.get()
-		parent = self.p_bone.get()
-		# Checking if specified location is a folder or file, batch dupe is performed if a folder, otherwise a single dupe is performed
-		if loc.endswith('.smd'):
-			inst.single_dupe(loc, base, new, parent)
-		else:
-			inst.batch_dupe(loc, base, new, parent)
-	def dupe_scr(self, base, new, parent):
+		qcSelect = QCWin(self.qcDATA, inst, 'd', [self.b_bone.get(),self.n_bone.get(),self.p_bone.get()])
+		""""if qcSelect.finished:
+			loc = self.path.get()
+			base = self.b_bone.get()
+			new = self.n_bone.get()
+			parent = self.p_bone.get()
+			# Checking if specified location is a folder or file, batch dupe is performed if a folder, otherwise a single dupe is performed
+			if loc.endswith('.smd'):
+				inst.single_dupe(loc, base, new, parent)
+			else:
+				inst.batch_dupe(loc, base, new, parent)"""
+	def dupe_scr(self, base, new, parent, qc):
 		# Alternate bone duping function for scripts
-		inst = Dupe()
-		loc = self.path.get()
-		if loc.endswith('.smd'):
-			inst.single_dupe(loc, base, new, parent)
-		else:
-			inst.batch_dupe(loc, base, new, parent)
+		qc.startScript(batch=qc.batch, values=[base, new, parent])
 
 	""" Switches menu to the Bone Dupe Menu """
 	def bd_menu(self):
@@ -535,30 +543,28 @@ class GUI:
 		# Initialising Pointer fix function
 		# We're using it for the .bmp extension function
 		inst = PointerFix()
-		loc = self.path.get()
+		qcSelect = QCWin(self.qcDATA, inst, 'b', [self.ref.get()])
+		"""loc = self.path.get()
 		ref = self.ref.get()
-		inst.add_bmp(loc, ref)
+		inst.add_bmp(loc, ref)"""
 	
-	def bmp_scr(self, ref):
+	def bmp_scr(self, ref, qc):
 		# Alternate function for scripts
-		inst = PointerFix()
-		loc = self.path.get()
-		inst.add_bmp(loc, ref)
+		qc.startScript(values=[ref])
 
 	def matrename(self):
 		# Material Pointer Fixing function
 		inst = PointerFix()
-		loc = self.path.get()
+		qcSelect = QCWin(self.qcDATA, inst, 'm', [self.ref.get(),self.rename.get(),self.replace.get()])
+		"""loc = self.path.get()
 		ref = self.ref.get()
 		torename = self.rename.get()
 		replace = self.replace.get()
-		inst.rename_part(loc, ref, torename, replace)
+		inst.rename_part(loc, ref, torename, replace)"""
 	
-	def matrename_scr(self, ref, torename, replace):
+	def matrename_scr(self, ref, torename, replace, qc):
 		# Alternate function for scripts
-		inst = PointerFix()
-		loc = self.path.get()
-		inst.rename_part(loc, ref, torename, replace)
+		qc.startScript(values=[ref, torename, replace])
 	
 	def scripts(self):
 		# Opens Script selection window
@@ -573,11 +579,17 @@ class GUI:
 		print('Executing script')
 		values = []
 		mode = script[0]
-		# If in duping mode
+		inst = None
+		if mode == 'm' or mode == 'b':
+			inst = PointerFix()
+		else:
+			inst = Dupe()
+		qcSelect = QCWin(self.qcDATA, inst, mode, [], True, script[1])
+		"""# If in duping mode
 		if mode == 'd':
 			for d in script[1]:
 				if d == '-':
-					self.dupe_scr(values[0], values[1], values[2])
+					self.dupe_scr(values[0], values[1], values[2], qcSelect)
 					values = []
 					continue
 				else:
@@ -586,7 +598,7 @@ class GUI:
 		elif mode == 'm':
 			for d in script[1]:
 				if d == '-':
-					self.matrename_scr(values[0], values[1], values[2])
+					self.matrename_scr(values[0], values[1], values[2], qcSelect)
 					values = []
 					continue
 				else:
@@ -595,12 +607,12 @@ class GUI:
 		elif mode == 'b':
 			for d in script[1]:
 				if d == '-':
-					self.bmp_scr(values[0])
+					self.bmp_scr(values[0], qcSelect)
 					values = []
 					continue
 				else:
 					values.append(d)
-		"""# If in plugin initialising mode
+		# If in plugin initialising mode
 		elif mode == 'p':
 			print(script)
 			filename = script[1][0]
@@ -608,6 +620,5 @@ class GUI:
 
 
 
-root = Tk()
-guii = GUI(root)
-root.mainloop()
+guii = GUI()
+guii.mainloop()

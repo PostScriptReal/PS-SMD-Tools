@@ -39,7 +39,7 @@ class PointerFix:
 	def rename_part(self, file, ref, torename, replace):
 		opt = self.options()
 		if opt["backup_smd"]:
-			directory = file.rstrip('.smd') + 'B.smd'
+			directory = file.replace('.smd', 'B.smd')
 			shutil.copy(file, directory)
 		# Reading Model SMD
 		mdl = open(file, 'r')
@@ -59,20 +59,51 @@ class PointerFix:
 		else:
 			# Otherwise the program will try to find an exact name
 			find_spec = True
-			print("Format Error: '*' is not at the start nor end of reference variable")
+			# print("Format Error: '*' is not at the start nor end of reference variable")
 		count = -1
+		chMade = False
 		if check_end:
 			for l in mdl_smd:
 				count += 1
 				if l.endswith(ref):
 					mdl_smd[count] = l.replace(torename, replace)
-			mdl = open(file, 'w')
-			mdl_smd = self.nl_insert(mdl_smd)
-			mdl.write(self.list_to_string(mdl_smd))
-			mdl.close()
-			print("SMD Written")
-		elif not find_spec:
-			pass
+					chMade = True
+			if chMade:
+				mdl = open(file, 'w')
+				mdl_smd = self.nl_insert(mdl_smd)
+				mdl.write(self.list_to_string(mdl_smd))
+				mdl.close()
+				print("SMD Written")
+			else:
+				print("No changes were made, did you specify an invalid finder value?")
+		elif find_spec:
+			for l in mdl_smd:
+				count += 1
+				if l == ref:
+					mdl_smd[count] = l
+					chMade = True
+			if chMade:
+				mdl = open(file, 'w')
+				mdl_smd = self.nl_insert(mdl_smd)
+				mdl.write(self.list_to_string(mdl_smd))
+				mdl.close()
+				print("SMD Written")
+			else:
+				print("No changes were made, did you specify an invalid finder value?")
+		elif not check_end:
+			for l in mdl_smd:
+				count += 1
+				if l.startswith(ref):
+					mdl_smd[count] = l.replace(torename, replace)
+					chMade = True
+			if chMade:
+				mdl = open(file, 'w')
+				mdl_smd = self.nl_insert(mdl_smd)
+				mdl.write(self.list_to_string(mdl_smd))
+				mdl.close()
+				print("SMD Written")
+			else:
+				print("No changes were made, did you specify an invalid finder value?")
 
 	def add_bmp(self, file, ref):
 		opt = self.options()
@@ -83,6 +114,7 @@ class PointerFix:
 		mdl_smd = self.nl_clean(mdl.readlines())
 		skip_line = True
 		triangles = False
+		chMade = False
 		if ref == '*':
 			count = -1
 			mini_c = 0
@@ -108,6 +140,7 @@ class PointerFix:
 						continue
 				mdl_smd[count] = l + '.bmp'
 				skip_line = True
+				chMade = True
 		else:
 			count = -1
 			mini_c = 0
@@ -134,8 +167,12 @@ class PointerFix:
 				if l == ref:
 					mdl_smd[count] = l + '.bmp'
 					skip_line = True
+					chMade = True
 
-		mdl = open(file, 'w')
-		mdl.write(self.list_to_string(self.nl_insert(mdl_smd)))
-		mdl.close()
-		print('SMD Written')
+		if chMade:
+			mdl = open(file, 'w')
+			mdl.write(self.list_to_string(self.nl_insert(mdl_smd)))
+			mdl.close()
+			print('SMD Written')
+		else:
+			print("No changes were made, did you specify an invalid finder value?")

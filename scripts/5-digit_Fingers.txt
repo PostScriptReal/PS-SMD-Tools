@@ -34,3 +34,39 @@ Bip01 L Finger4
 Bip01 L Finger12
 Bip01 L Finger42
 Bip01 L Finger41
+-
+Bip01 R Finger1
+Bip01 R Finger2
+Bip01 R Hand
+-
+Bip01 R Finger11
+Bip01 R Finger21
+Bip01 R Finger2
+-
+Bip01 R Finger12
+Bip01 R Finger22
+Bip01 R Finger21
+-
+Bip01 R Finger1
+Bip01 R Finger3
+Bip01 R Hand
+-
+Bip01 R Finger11
+Bip01 R Finger31
+Bip01 R Finger3
+-
+Bip01 R Finger12
+Bip01 R Finger32
+Bip01 R Finger31
+-
+Bip01 R Finger1
+Bip01 R Finger4
+Bip01 R Hand
+-
+Bip01 R Finger11
+Bip01 R Finger41
+Bip01 R Finger4
+-
+Bip01 R Finger12
+Bip01 R Finger42
+Bip01 R Finger41
