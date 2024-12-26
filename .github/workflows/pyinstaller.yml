@@ -23,5 +23,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SMDTools110
+          name: SMDTools-${{ matrix.os }}-110
           path: dist/SMDTools
