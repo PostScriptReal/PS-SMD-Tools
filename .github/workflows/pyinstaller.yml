@@ -25,9 +25,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-<<<<<<< Updated upstream
-          name: SMDTools-${{ matrix.os }}-110-2
-=======
           name: SMDTools-${{ matrix.os }}-${{ env.DATE }}
->>>>>>> Stashed changes
           path: dist/SMDTools
