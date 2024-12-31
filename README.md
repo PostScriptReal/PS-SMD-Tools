@@ -13,7 +13,7 @@ PS's SMD Tools allows for the editing of GoldSRC SMD files in advanced ways that
 If you are a Windows/Linux user, you can download binaries for your respective OS and run them without needing to install python. The binaries support the following versions of Windows and Linux
 
 - Windows 8 and above (x86 only)
-- Linux distros running Ubuntu 22.04 and up or equivalent (also x86 only)
+- Linux distros running Ubuntu 24.04 and up or equivalent (also x86 only)
 
 If your device doesn't meet the above requirements, you must run the program from the source code.
 
