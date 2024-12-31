@@ -9,8 +9,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-       - name: Set date environment variable
-         run: echo "DATE=$(date +%d-%m-%Y)" >> $GITHUB_ENV
+      - name: Set date environment variable
+        run: echo "DATE=$(date +%d-%m-%Y)" >> $GITHUB_ENV
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
