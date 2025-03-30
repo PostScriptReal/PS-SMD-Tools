@@ -1,3 +1,7 @@
+_ This is a script for changing texture pointers that end with 2-5.
+_ This is for times where you had to make a model with high poly counts,
+_ and each separated part of the model uses the same texture file
+_ forcing you to create a copy of the texture with a different name.
 mode mat
 *2.bmp
 2.bmp

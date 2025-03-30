@@ -161,6 +161,8 @@ class QCWin(Tk):
             bdNames = []
             smds = None
             smds = dat.bodies[0]["body"]
+            print(smds)
+            print(isinstance(smds, str))
             self.valChk = ''
 
             self.scr_list = Listbox(frame, listvariable=bdNames, selectmode=SINGLE)
@@ -176,13 +178,14 @@ class QCWin(Tk):
             self.smd_list = Listbox(frame, listvariable=smds)
             self.smd_list.grid(column=1, row=9, sticky=(N, S, E, W), ipadx=20, padx=20, pady=10, rowspan=5)
 
-            if not smds is str:
+            if isinstance(smds, str):
+                self.smd_list.insert(0, smds)
+            else:
                 count = -1
                 for s in smds:
                     count += 1
                     self.smd_list.insert(count, s)
-            else:
-                self.smd_list.insert(0, smd)
+                
             
             select_scr = Button(frame, text="Select", command=self.select)
             select_scr.grid(column=1, row=69, sticky=(S))

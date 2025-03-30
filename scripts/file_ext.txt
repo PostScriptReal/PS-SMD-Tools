@@ -1,3 +1,4 @@
+_ The 'bmp' mode adds the .bmp extension to a texture pointer
 mode bmp
 Sample
 -

@@ -47,6 +47,10 @@ class Interp:
 		global guii
 		scr_f = open(self.scr_ref, 'r')
 		scr = self.nl_clean(scr_f.readlines())
+		for l in scr:
+			if l.startswith("_"):
+				scr.remove(l)
+		print(scr)
 		self.mode = ''
 		if scr[0] == 'mode dupe':
 			self.mode = 'd'

@@ -1,3 +1,10 @@
+_ The name of this script is pretty self explanatory.
+_ It gives you the ability to have a rig with 5 fingers.
+_ To use this you have to modify the rig to have 
+_ additional bones using the naming convention found here.
+_ A dedicated tutorial for this can be found on the wiki,
+_ just click the help button and find the 
+_ 'Creating 5-fingered playermodel rigs' page
 mode dupe
 Bip01 L Finger1
 Bip01 L Finger2

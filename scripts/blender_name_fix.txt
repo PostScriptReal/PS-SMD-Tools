@@ -1,3 +1,5 @@
+_ This is a script that fixes texture pointers that are affected by
+_ Blender's duplicate material naming conventions.
 mode mat
 *.001
 .001
